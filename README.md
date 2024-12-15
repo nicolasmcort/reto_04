@@ -1,5 +1,7 @@
 # reto_04
 
+El código implementa un sistema de pedidos para un restaurante, con clases que representan diferentes componentes del sistema. La clase `MenuItem` es la base para elementos del menú, mientras que las subclases `Beverage`, `Appetizer` y `MainCourse` añaden atributos específicos como temperatura, azúcar, calorías, tiempo de preparación, etc. La clase `Menu` gestiona todos los ítems disponibles y facilita la búsqueda de elementos y la clase `Order` permite agregar ítems al pedido, calcular el precio total y aplicar descuentos.
+Por último, el sistema incluye la clase `Payment` y sus subclases `CreditCard` y `Cash` para realizar pagos con métodos en efectivo y tarjeta de crédito.
 
 ``` python
 class MenuItem:
@@ -45,7 +47,7 @@ class Beverage(MenuItem):
 
 
 class Appetizer(MenuItem):
-    # Subclass representing appetizers 
+    # Subclass representing appetizers
     def __init__(self, name: str, price: float, calories: float = 0) -> None:
         super().__init__(name, price)
         self.__calories = calories  
@@ -62,16 +64,14 @@ class MainCourse(MenuItem):
     def __init__(self, name: str, price: float, is_vegetarian: bool = False, prep_time: float = 0) -> None:
         super().__init__(name, price)
         self.__is_vegetarian = is_vegetarian  
-        self.__prep_time = prep_time         
+        self.__prep_time = prep_time        
 
-    # Getter and Setter for vegetarian preference
     def get_is_vegetarian(self):
         return self.__is_vegetarian
 
     def set_is_vegetarian(self, is_vegetarian):
         self.__is_vegetarian = is_vegetarian
 
-    # Getter and Setter for preparation time
     def get_prep_time(self):
         return self.__prep_time
 
@@ -97,7 +97,6 @@ class Menu:
             MainCourse("Salad", 8)
         ]
 
-    # Search for an item in the menu by name
     def get_item(self, name: str) -> "MenuItem":
         for item in self.items:
             if item.get_name().lower() == name.lower():
@@ -109,19 +108,19 @@ class Order:
     # Represents an order containing menu items and discount logic
     def __init__(self, menu: Menu) -> None:
         self.menu = menu
-        self.__menu_items = []  # Private list of ordered items
+        self.menu_items = []         
 
     # Add an item to the order
     def add_item(self, name: str) -> None:
         item = self.menu.get_item(name)
         if item:
-            self.__menu_items.append(item)
+            self.menu_items.append(item)
         else:
             print(f"Item '{name}' is not in the menu.")
 
     # Apply discount based on order composition and total cost
     def apply_discount(self) -> float:
-        total_price = sum(item.get_price() for item in self.__menu_items)
+        total_price = sum(item.get_price() for item in self.menu_items)
         discount = 0
 
         if total_price >= 50:
@@ -130,9 +129,9 @@ class Order:
             discount = 0.1
 
         # Count beverages, appetizers, and main courses
-        beverage_count = sum(1 for item in self.__menu_items if type(item) == Beverage)
-        appetizer_count = sum(1 for item in self.__menu_items if type(item) == Appetizer)
-        main_course_count = sum(1 for item in self.__menu_items if type(item) == MainCourse)
+        beverage_count = sum(1 for item in self.menu_items if type(item) == Beverage)
+        appetizer_count = sum(1 for item in self.menu_items if type(item) == Appetizer)
+        main_course_count = sum(1 for item in self.menu_items if type(item) == MainCourse)
 
         if beverage_count >= 2:
             discount += 0.05
@@ -145,13 +144,12 @@ class Order:
 
     # Calculate total order price with discount applied
     def calculate_total_price(self) -> float:
-        total_price = sum(item.get_price() for item in self.__menu_items)
+        total_price = sum(item.get_price() for item in self.menu_items)
         discount = self.apply_discount()
         return total_price * (1 - discount)
 
 
 class Payment:
-    # Base class for payment methods
     def pay(self, total_price: float) -> bool:
         raise NotImplementedError("Subclasses must implement the pay method")
 
@@ -185,7 +183,6 @@ class Cash(Payment):
             print(f"Insufficient cash. Need ${total_price - self.__amount}.")
             return False
 
-
 # Create menu and order instances
 menu = Menu()
 order = Order(menu)
@@ -196,7 +193,7 @@ my_credit_card = CreditCard("1234567890123456", "123", 500)
 # Display the menu
 print("\nMenu:")
 for item in menu.items:
-    print(f"{item.name} - ${item.price}")
+    print(f"{item.get_name()} - ${item.get_price()}")
 
 # Allow the user to place an order
 while True:
@@ -204,6 +201,24 @@ while True:
     if item_name.lower() == "done":
         break
     order.add_item(item_name)
+
+if order.menu_items:
+    print("\nYour order:")
+    for item in order.menu_items:
+        print(f"- {item.get_name()}: ${item.get_price()}")
+    
+    # Obtain more details about the order
+    for item in order.menu_items:
+        if type(item) == Beverage:
+            item.temperature = float(input(f"Indicate the temperature of the {item.get_name().lower()}: "))
+            item.is_sugared = input(f"Would you like your {item.get_name().lower()} with sugar? (y/n): ").strip().lower() == "y"
+        elif type(item) == Appetizer:
+            item.calories = float(input(f"Indicate the amount of calories for your {item.get_name().lower()}: "))
+        elif type(item) == MainCourse:
+            item.is_vegetarian = input(f"Would you like the {item.get_name().lower()} to be vegetarian? (y/n): ").strip().lower() == "y"
+            item.prep_time = float(input(f"Indicate the preparation time for your {item.get_name().lower()} (in minutes): "))
+else:
+    print("\nNo items were ordered")
 
 total_price = order.calculate_total_price()
 print(f"\nTotal price: ${total_price}")
@@ -220,4 +235,37 @@ elif choice == "credit":
 else:
     print("Invalid payment method.")
 
+
 ```
+***
+### Ejemplo de uso
+
+En este ejemplo, el usuario selecciona 4 ítems del menú: un té, fruta, una ensalada y una hamburguesa. El sistema solicita detalles adicionales, y después se calcula el total de la compra aplicando un descuento total del 10% del pedido, dando como resultado un valor de $22.5
+
+``` bash
+Menu:
+Soda - $2
+Tea - $3
+Coffee - $5
+Juice - $4
+Water - $4
+Fruit - $2
+Cookies - $4
+Popcorn - $4
+Pizza - $10
+Burger - $12
+Spaghetti - $14
+Salad - $8
+
+Your order:
+- Tea: $3
+- Fruit: $2
+- Salad: $8
+- Burger: $12
+
+Total price: $22.5
+Payment of $22.5 successful with cash.
+Order confirmed and paid in cash.
+
+```
+
