@@ -240,7 +240,7 @@ else:
 ***
 ### Ejemplo de uso
 
-En este ejemplo, el usuario selecciona 4 ítems del menú: un té, fruta, una ensalada y una hamburguesa. El sistema solicita detalles adicionales, y después se calcula el total de la compra aplicando un descuento total del 10% del pedido, dando como resultado un valor de $22.5
+En este ejemplo, el usuario selecciona 4 ítems del menú: un té, fruta, una ensalada y una hamburguesa. El sistema solicita detalles adicionales, y después se calcula el costo de la compra aplicando un descuento total del 10% del pedido, dando como resultado un valor de $22.5
 
 ``` bash
 Menu:
