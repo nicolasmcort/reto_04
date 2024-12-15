@@ -1,6 +1,6 @@
 # reto_04
 
-El código implementa un sistema de pedidos para un restaurante, con clases que representan diferentes componentes del sistema. La clase `MenuItem` es la base para elementos del menú, mientras que las subclases `Beverage`, `Appetizer` y `MainCourse` añaden atributos específicos como temperatura, azúcar, calorías, tiempo de preparación, etc. La clase `Menu` gestiona todos los ítems disponibles y facilita la búsqueda de elementos y la clase `Order` permite agregar ítems al pedido, calcular el precio total y aplicar descuentos.
+El código implementa un sistema de pedidos para un restaurante, con clases que representan diferentes componentes del sistema. La clase `MenuItem` es la base para elementos del menú, mientras que las subclases `Beverage`, `Appetizer` y `MainCourse` añaden atributos específicos como temperatura, azúcar, calorías, tiempo de preparación, etc. La clase `Menu` gestiona todos los ítems disponibles y facilita la búsqueda de elementos, y la clase `Order` permite agregar ítems al pedido, calcular el precio total y aplicar descuentos.
 Por último, el sistema incluye la clase `Payment` y sus subclases `CreditCard` y `Cash` para realizar pagos con métodos en efectivo y tarjeta de crédito.
 
 ``` python
